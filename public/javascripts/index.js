@@ -32,6 +32,7 @@ function random(m,n){
 	return Math.round(Math.random() * (n - m) + m);
 }
 function getDots(){
+	Dots = [];
 	for(var i = 0; i < size; i++){
 		var x = random(0, width);
 		var y = random(0, height);
@@ -97,8 +98,8 @@ function draw(arr){
 			g.addColorStop(1, o.color);
 			ctx.fillStyle = g;
 			ctx.fill();
-			//o.x += o.dx;
-			//o.x = o.x > width ? 0 : o.x;
+			o.x += o.dx;
+			o.x = o.x > width ? 0 : o.x;
 			//ctx.strokeStyle = '#fff';
 			//ctx.stroke();
 		}
