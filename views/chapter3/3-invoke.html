@@ -1,0 +1,46 @@
+{% extends '../layout.html' %}
+{% block title %}3函数声明{% parent %}{% endblock %}
+
+{% block content %}
+<em>所有的函数调用都会传递两个隐式参数：arguments和this</em>
+{% parent %}
+{% endblock %}
+
+{% block foot %}
+{% parent %}
+<script>
+	assert(true, '|----- 作为函数和方法调用 -----|');
+	function creep(){return this;}
+	assert(creep() === window, 'Creeping in the window');
+	var sneak = creep;
+	assert(sneak() === window, 'Sneaking in the window');
+	var ninja1 = {
+		skulk: creep
+	}
+	assert(ninja1.skulk() == ninja1, 'The 1st ninja is skulking');
+
+	var ninja2 = {
+		skulk: creep
+	}
+	assert(ninja2.skulk() == ninja2, 'The 2nd ninja is skulking');
+	assert(true, '|----- 构造器 -----|');
+	function Ninja(){
+		this.skulk = function(){return this;}
+	}
+	var ninja3 = new Ninja();
+	var ninja4 = new Ninja();
+	assert(ninja3.skulk() == ninja3, 'The 1st ninjs is skulking');
+	assert(ninja4.skulk() == ninja4, 'The 2nd ninja is skulking');
+	assert(true, '|----- apply 和 call -----|');
+	function juggle(){
+		var result = 0;
+		for(var n = 0; n < arguments.length; n++){
+			result += arguments[n];
+		}
+		this.result = result;
+	}
+	var ninja5 = {};
+	var ninja6 = {};
+	
+</script>
+{% endblock %}
