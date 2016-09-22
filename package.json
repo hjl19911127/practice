@@ -1,0 +1,13 @@
+{
+  "name": "ninja",
+  "version": "1.0.0",
+  "description": "examples of the book",
+  "private": true,
+  "dependencies": {
+    "koa": "^1.2.4",
+    "koa-router": "^5.4.0",
+    "koa-static-cache": "^3.1.7",
+    "koa-swig": "^2.2.0"
+  },
+  "license": "MIT"
+}

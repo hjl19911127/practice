@@ -1,0 +1,32 @@
+{% extends '../layout.html' %}
+{% block title %} NO.3函数声明 {% parent %}{% endblock %}
+
+{% block content %}
+	{% parent %}
+{% endblock %}
+
+{% block foot %}
+{% parent %}
+<script>
+	function isNimble(){return true;}
+		assert(typeof window.isNimble === 'function', 'isNimble() defined');
+		assert(isNimble.name === 'isNimble', 'isNimble() has a name');
+
+		var canFly = function(){return true;}
+		assert(typeof window.canFly === 'function', 'canFly() defined');
+		assert(canFly.name === '', 'canFly() has no name');
+
+		window.isDeadly = function(){return true;}
+		assert(typeof window.isDeadly === 'function', 'isDeadly() defined');
+		assert(isDeadly.name === '', 'isDeadly() has no name');
+
+		function outer(){
+			assert(typeof inner === 'function', 'inner() in scope before declaration');
+			function inner(){}
+			assert(typeof inner === 'function', 'inner() in scope after declaration');
+			assert(window.inner === undefined, 'inner() not in global scope');
+		}
+		outer();
+</script>
+	
+{% endblock %}
