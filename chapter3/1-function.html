@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>函数声明</title>
+	<link rel="stylesheet" href="../common/style.css">
+</head>
+<body>
+	<ul id="results"></ul>
+	<script src='../common/assert.js'></script>
+	<script>
+		function isNimble(){return true;}
+		assert(typeof window.isNimble === 'function', 'isNimble() defined');
+		assert(isNimble.name === 'isNimble', 'isNimble() has a name');
+
+		var canFly = function(){return true;}
+		assert(typeof window.canFly === 'function', 'canFly() defined');
+		assert(canFly.name === '', 'canFly() has no name');
+
+		window.isDeadly = function(){return true;}
+		assert(typeof window.isDeadly === 'function', 'isDeadly() defined');
+		assert(isDeadly.name === '', 'isDeadly() has no name');
+
+		function outer(){
+			assert(typeof inner === 'function', 'inner() in scope before declaration');
+			function inner(){}
+			assert(typeof inner === 'function', 'inner() in scope after declaration');
+			assert(window.inner === undefined, 'inner() not in global scope');
+		}
+		outer();
+
+	</script>
+</body>
+</html>
