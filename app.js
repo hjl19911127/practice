@@ -4,6 +4,7 @@ var render = require('koa-swig');
 var router = require('koa-router')();
 var routers = require('./routers');
 var staticCache = require('koa-static-cache');
+var bodyParser = require('koa-bodyparser');
 var app = koa();
 
 app.use(staticCache(path.join(__dirname, 'static'), {
@@ -21,5 +22,7 @@ routers(router);
 
 app.use(router.routes())
    .use(router.allowedMethods());
+
+app.use(bodyParser());
 
 app.listen(3000);
