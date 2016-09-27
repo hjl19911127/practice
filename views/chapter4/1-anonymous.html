@@ -1,0 +1,20 @@
+{% extends '../layout.html' %}
+{% block title %}4anonymous{% parent %}{% endblock %}
+
+{% block content %}
+<em>匿名函数</em>
+{% parent %}
+{% endblock %}
+
+{% block foot %}
+{% parent %}
+<script>
+	window.onload = function(){ assert(true, 'power'); };
+
+	var ninja = { shout: function(){ assert(true, 'Ninja'); } };
+	ninja.shout();
+	
+	setTimeout(function(){ assert(true, 'Forever'); },500)
+
+</script>
+{% endblock %}

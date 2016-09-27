@@ -1,0 +1,22 @@
+{% extends '../layout.html' %}
+{% block title %}4object{% parent %}{% endblock %}
+
+{% block content %}
+<em>将函数视为对象</em>
+{% parent %}
+{% endblock %}
+
+{% block foot %}
+{% parent %}
+<script>
+var store = {
+	nextId: 1,
+	cache: {},
+	add: function(fn){
+		if(!fn.id){
+			
+		}
+	}
+}
+</script>
+{% endblock %}

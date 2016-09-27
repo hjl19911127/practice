@@ -1,0 +1,61 @@
+{% extends '../layout.html' %}
+{% block title %}4recursion{% parent %}{% endblock %}
+
+{% block content %}
+<em>递归</em>
+{% parent %}
+{% endblock %}
+
+{% block foot %}
+{% parent %}
+<script>
+function chirp(n){
+	return n > 1 ? chirp(n - 1) + '-chirp' : 'chirp';
+}
+assert(chirp(3) == 'chirp-chirp-chirp', 'Calling the named function comes naturally.');
+
+var ninja = {
+	chirp: function(n){
+		return n > 1 ? ninja.chirp(n - 1) + '-chirp' : 'chirp';
+	}
+}
+assert(ninja.chirp(3) === 'chirp-chirp-chirp', 'An object propery isn\'t too confusing, either.');
+
+var samurai = { chirp: ninja.chirp };
+ninja = {};
+try{
+	assert(samurai.chirp(3) === 'chirp-chirp-chirp', 'Is this going to work?');
+}catch(e){
+	assert(false, 'Un, this isn\'t good! Where\'d ninja.chirp go?');
+}
+
+var ninja1 = {
+	chirp: function(n){
+		return n > 1 ? this.chirp(n - 1) + '-chirp' : 'chirp';
+	}
+}
+var samurai1 = { chirp: ninja1.chirp };
+ninja1 = {};
+try{
+	assert(samurai1.chirp(3) === 'chirp-chirp-chirp', 'Is this going to work?');
+}catch(e){
+	assert(false, 'Un, this isn\'t good! Where\'d ninja.chirp go?');
+}
+
+var ninja2 = {
+	chirp: function signal(n){
+		return n > 1 ? signal(n - 1) + '-chirp' : 'chirp';
+	}
+}
+assert(ninja2.chirp(3) === 'chirp-chirp-chirp', 'Works as we would expect it to!');
+var samurai2 = { chirp: ninja2.chirp };
+ninja2 = {};
+assert(samurai2.chirp(3) == 'chirp-chirp-chirp', 'The method correctly calls itself.');
+
+var ninja3 = function myNinja(){
+	assert(ninja3 == myNinja, 'This function is named two things at once!');
+}
+ninja3();
+assert(typeof myNinja == 'undefined', 'But myNinja isn\'t defined outside of the function.');
+</script>
+{% endblock %}

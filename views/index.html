@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>js忍者秘籍</title>
+</head>
+<body>
+	<ol>
+		{% for list in lists %}
+		<li>
+			Chapter {{ list.chapter }}
+			<ol>
+			{% for content in list.contents %}
+				<li><a href='chapter{{list.chapter}}/{{loop.index}}'>{{ content }}</a></li>
+			{% endfor %}
+			</ol>
+		</li>
+		{% endfor %}
+	</ol>
+</body>
+</html>

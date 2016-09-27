@@ -1,41 +1,34 @@
-module.exports = function(router){
-	router.get('/chapter2/1', function *(next){
-		yield this.render('chapter2/1-assert.html');
-		yield *next;
-	});
+module.exports = function(router) {
+    let lists = [{
+        chapter: 2,
+        contents: ['assert', 'assertGroup', 'asynAssert']
+    }, {
+        chapter: 3,
+        contents: ['function', 'scope', 'invoke', 'foreach']
+    }, {
+        chapter: 4,
+        contents: ['anonymous', 'recursion']
+    }];
 
-	router.get('/chapter2/2', function *(next){
-		yield this.render('chapter2/2-assertGroup.html');
-		yield *next;
-	});
+    router.get('/', function*(next) {
+        let data = {};
+        data.lists = lists;
+        yield this.render('index.html', data);
+        yield * next;
+    });
 
-	router.get('/chapter2/3', function *(next){
-		yield this.render('chapter2/3-asynAssert.html');
-		yield *next;
-	});
+    (function() {
+        for (let i = 0, len = lists.length; i < len; i++) {
+            for (let j = 0, l = lists[i].contents.length; j < l; j++) {
+                let index = j + 1;
+                router.get('/chapter' + lists[i].chapter + '/' + index, function*(next) { yield this.render('chapter' + lists[i].chapter + '/' + index + '-' + lists[i].contents[j] + '.html');
+                    yield *next; });
+            }
+        }
+    })();
 
-	router.get('/chapter3/1', function *(next){
-		yield this.render('chapter3/1-function.html');
-		yield *next;
-	});
-
-	router.get('/chapter3/2', function *(next){
-		yield this.render('chapter3/2-scope.html');
-		yield *next;
-	});
-
-	router.get('/chapter3/3', function *(next){
-		yield this.render('chapter3/3-invoke.html');
-		yield *next;
-	});
-
-	router.get('/chapter3/4', function *(next){
-		yield this.render('chapter3/4-foreach.html');
-		yield *next;
-	});
-
-	router.get('/test', function *(next){
-		yield this.render('test.html');
-		yield *next;
-	});
+    router.get('/test', function*(next) {
+        yield this.render('test.html');
+        yield * next;
+    });
 };
