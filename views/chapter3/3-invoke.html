@@ -18,11 +18,11 @@
 		skulk: creep
 	}
 	assert(ninja1.skulk() == ninja1, 'The 1st ninja is skulking');
-
 	var ninja2 = {
 		skulk: creep
 	}
 	assert(ninja2.skulk() == ninja2, 'The 2nd ninja is skulking');
+
 	assert(true, '|----- 构造器 -----|');
 	function Ninja(){
 		this.skulk = function(){return this;}
@@ -31,6 +31,7 @@
 	var ninja4 = new Ninja();
 	assert(ninja3.skulk() == ninja3, 'The 1st ninjs is skulking');
 	assert(ninja4.skulk() == ninja4, 'The 2nd ninja is skulking');
+
 	assert(true, '|----- apply 和 call -----|');
 	function juggle(){
 		var result = 0;
@@ -41,6 +42,9 @@
 	}
 	var ninja5 = {};
 	var ninja6 = {};
-	
+	juggle.apply(ninja5, [1,2,3,4]);
+	juggle.call(ninja6, 5,6,7,8);
+	assert(ninja5.result === 10, 'juggled via apply');
+	assert(ninja6.result === 26, 'juggled via call');
 </script>
 {% endblock %}

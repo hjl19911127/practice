@@ -4,7 +4,6 @@ module.exports = function(router){
 		yield *next;
 	});
 
-
 	router.get('/chapter2/2', function *(next){
 		yield this.render('chapter2/2-assertGroup.html');
 		yield *next;
@@ -27,6 +26,11 @@ module.exports = function(router){
 
 	router.get('/chapter3/3', function *(next){
 		yield this.render('chapter3/3-invoke.html');
+		yield *next;
+	});
+
+	router.get('/chapter3/4', function *(next){
+		yield this.render('chapter3/4-foreach.html');
 		yield *next;
 	});
 
