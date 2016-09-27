@@ -1,0 +1,21 @@
+{% extends './layout.html' %}
+{% block title %}{% endblock %}
+
+{% block content %}
+
+{% parent %}
+test
+{% endblock %}
+
+{% block foot %}
+<script src="/test/index.js"></script>
+<script src="/test/auth.js"></script>
+<script>
+	window.onload = function(){
+		var store = {
+			getMacToken: auth.getMacToken()
+		}
+		console.log(store.getMacToken);
+	}
+</script>
+{% endblock %}

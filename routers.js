@@ -29,4 +29,9 @@ module.exports = function(router){
 		yield this.render('chapter3/3-invoke.html');
 		yield *next;
 	});
+
+	router.get('/test', function *(next){
+		yield this.render('test.html');
+		yield *next;
+	});
 };
