@@ -8,6 +8,9 @@ module.exports = function(router) {
     }, {
         chapter: 4,
         contents: ['anonymous', 'recursion', 'funAsObj', 'arguments']
+    }, {
+        chapter: 5,
+        contents: ['closure']
     }];
 
     router.get('/', function*(next) {
@@ -21,8 +24,10 @@ module.exports = function(router) {
         for (let i = 0, len = lists.length; i < len; i++) {
             for (let j = 0, l = lists[i].contents.length; j < l; j++) {
                 let index = j + 1;
-                router.get('/chapter' + lists[i].chapter + '/' + index, function*(next) { yield this.render('chapter' + lists[i].chapter + '/' + index + '-' + lists[i].contents[j] + '.html');
-                    yield *next; });
+                router.get('/chapter' + lists[i].chapter + '/' + index, function*(next) {
+                    yield this.render('chapter' + lists[i].chapter + '/' + index + '-' + lists[i].contents[j] + '.html');
+                    yield * next;
+                });
             }
         }
     })();

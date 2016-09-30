@@ -1,0 +1,37 @@
+{% extends '../layout.html' %}
+{% block title %}5closure{% parent %}{% endblock %}
+
+{% block content %}
+<em>闭包</em>                
+{% parent %}
+{% endblock %}
+
+{% block foot %}
+{% parent %}
+<script>
+var outerValue = 'ninja';
+var later;
+
+function outerFunction(){
+	var innerValue = 'samurai';
+
+	function innerFunction(paramValue){
+		assert(outerValue, 'Inner can see the ninja.');
+		assert(innerValue, 'Inner can see the samurai.');
+		assert(paramValue, 'Inner can see the '+paramValue);
+		assert(tooLate, 'Inner can see the ronin.');
+	}
+
+	later = innerFunction;
+}
+
+assert(!tooLate, 'Outer can\'t see the ronin');
+
+var tooLate = 'ronin';
+
+outerFunction();
+
+later('wakizashi');
+
+</script>
+{% endblock %}  
