@@ -7,7 +7,7 @@ module.exports = function(router) {
         contents: ['function', 'scope', 'invoke', 'foreach']
     }, {
         chapter: 4,
-        contents: ['anonymous', 'recursion']
+        contents: ['anonymous', 'recursion', 'funAsObj', 'arguments']
     }];
 
     router.get('/', function*(next) {

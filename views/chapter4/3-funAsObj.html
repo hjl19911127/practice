@@ -2,8 +2,10 @@
 {% block title %}4object{% parent %}{% endblock %}
 
 {% block content %}
-<em>将函数视为对象</em>
+<em>将函数视为对象</em>                
 {% parent %}
+<span id="first"></span>
+<span id="second"></span>
 {% endblock %}
 
 {% block foot %}
@@ -14,9 +16,52 @@ var store = {
 	cache: {},
 	add: function(fn){
 		if(!fn.id){
-			
+			fn.id = store.nextId++;
+			return !!(store.cache[fn.id] = fn);
 		}
 	}
+};
+
+function ninja(){}
+
+assert(store.add(ninja), 'Function was safely added.');
+assert(!store.add(ninja), 'But it was only added once');
+
+function isPrime(value){
+	if(!isPrime.answers) isPrime.answers = {};
+	if(isPrime.answers[value] != null){
+		return isPrime.answers[value];
+	} 
+	var prime = value != 1;
+	for(var i = 2; i < value; i++){
+		if(value % i == 0){
+			prime = false;
+			break;
+		}
+	}
+	return isPrime.answers[value] = prime;
 }
+
+assert(isPrime(5), '5 is prime!');
+assert(isPrime.answers[5], 'The answer was cached!');
+
+function getElements(name){
+	if(!getElements.cache) getElements.cache = {};
+	return getElements.cache[name] = getElements.cache[name] || document.getElementsByTagName(name);
+}
+
+var elems = {
+	length: 0,
+	add: function(elem){
+		Array.prototype.push.call(this, elem);
+	},
+	gather: function(id){
+		this.add(document.getElementById(id));
+	}
+};
+elems.gather('first');
+assert(elems.length == 1 && elems[0].nodeType, 'Verify that we have an element in our stash');
+elems.gather('second');
+assert(elems.length == 2 && elems[1].nodeType, 'Verify the other insertion');
 </script>
 {% endblock %}

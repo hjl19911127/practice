@@ -1,0 +1,40 @@
+{% extends '../layout.html' %}
+{% block title %}4arguments{% parent %}{% endblock %}
+
+{% block content %}
+<em>可变长度的参数列表</em>                
+{% parent %}
+{% endblock %}
+
+{% block foot %}
+{% parent %}
+<script>
+function smallest(array){
+	return Math.min.apply(null, array);
+}
+
+function biggest(array){
+	return Math.max.apply(null, array);
+}
+
+assert(smallest([0,1,2,3]) == 0, 'Located the smallest value');
+assert(biggest([0,1,2,3]) == 3, 'Located the largest value');
+
+function merge(root){
+	for(var i = 1; i < arguments.length; i++){
+		for(var key in arguments[i]){
+			root[key] = arguments[i][key];
+		}
+	}
+	return root;
+}
+var merged = merge({name: 'Batou'}, {city: 'Niihama'});
+assert(merged.name == 'Batou', 'The original name is intact.');
+assert(merged.city == 'Niihama', 'And the city has been copied over');
+
+function multiMax(multi){
+	return multi * Math.max.apply(Math, Array.prototype.slice.call(arguments,1));
+}
+assert(multiMax(3,1,2,3) == 9, '3*3=9 (First arg, by largest)');
+</script>
+{% endblock %}
