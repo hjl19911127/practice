@@ -70,7 +70,7 @@ addMethod(ninjas, 'find', function(name){
 addMethod(ninjas, 'find', function(first, last){
 	var ret = [];
 	for(var i = 0; i < this.values.length; i++){
-		if(this.values[i] == (first + ' ' + last))
+		if(this.values[i] == (first + ' ' + last))    
 			ret.push(this.values[i]);
 		return ret;
 	}
@@ -80,5 +80,9 @@ assert(ninjas.find().length == 3, 'Found all ninjas');
 assert(ninjas.find('Sam').length == 1, 'Found ninja by first name');
 assert(ninjas.find('Dean', 'Edwards').length == 1, 'Found ninja by first and last name');
 assert(ninjas.find('Alex', 'Russell', 'Jr') == undefined, 'Found nothing');
+
+function isFunction(fn){
+	return Object.prototype.toString.cal(fn) === '[object Function]';
+}
 </script>
 {% endblock %}  
