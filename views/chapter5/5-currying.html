@@ -1,0 +1,32 @@
+{% extends '../layout.html' %}
+{% block title %}5closure{% parent %}{% endblock %}
+
+{% block content %}
+<em>偏应用函数</em>                
+{% parent %}
+{% endblock %}
+
+{% block foot %}
+{% parent %}
+<script>
+window.onload = function(){
+	Function.prototype.partial = function(){
+		var fn = this, args = Array.prototype.slice.call(arguments);
+		return function(){
+			var arg = 0;
+			for(var i = 0; i < args.length && arg < arguments.length; i++){
+				if(args[i] === undefined){
+					args[i] == arguments[arg++];
+				}
+			}
+			return fn.apply(this, args);
+		}
+	}
+
+	String.prototype.csv = String.prototype.split.partial(/,\s*/);
+	var results = ('Mugan, Jin, Fuu').csv();
+
+	assert(results[0] == 'Mugan' && results[1] == 'Jin' && results[2] == 'Fuu', 'The text values were split properly');
+}
+</script>
+{% endblock %}  

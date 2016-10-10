@@ -10,7 +10,7 @@ module.exports = function(router) {
         contents: ['anonymous', 'recursion', 'funAsObj', 'arguments']
     }, {
         chapter: 5,
-        contents: ['closure']
+        contents: ['closure', 'privateVariable', 'callback','functionContext', 'currying']
     }];
 
     router.get('/', function*(next) {

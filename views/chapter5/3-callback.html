@@ -1,0 +1,67 @@
+{% extends '../layout.html' %}
+{% block title %}5closure{% parent %}{% endblock %}
+
+{% block head %}
+{% parent %}
+<style>
+	#box{
+		position: absolute;
+		width: 200px;
+		height: 200px;
+		border: 1px dotted orange;
+		line-height: 200px;
+		text-align: center;
+		color: orange;
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<em>回调</em>                
+{% parent %}
+<div id="testSubject"></div>
+<button type="button" id="testButton">Go!</button>
+
+<div id="box">动画</div>
+{% endblock %}
+
+{% block foot %}
+{% parent %}
+<script src="/addins/jquery/v1.11.1/jquery.min.js"></script>
+<script>
+$(function(){
+	//回调
+	$('#testButton').click(function(){
+		var elem$ = $('#testSubject');
+		elem$.html('Loading....');
+		$.ajax({
+			url: '/test',
+			success: function(html){
+				assert(elem$, 'We can see eleme$, via the closure for this callback.')
+				elem$.html(html);
+			}
+		});
+	});
+
+	//计时器
+	function animateIt(elementId){
+		var elem = document.getElementById(elementId);
+		var tick = 0;
+
+		var timer = setInterval(function(){
+			if(tick < 100){
+				elem.style.left = elem.style.top = tick + 'px';
+				tick++;
+			}
+			else{
+				clearInterval(timer);
+				assert(tick == 100, 'Tick accessed via a closure.');
+				assert(elem, 'Element also accessed via a closure.');
+				assert(timer, 'Timer reference also obtained via a closure.');
+			}
+		},10);
+	}
+	animateIt('box');	
+});
+</script>
+{% endblock %}  
