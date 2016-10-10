@@ -26,3 +26,5 @@ app.use(router.routes())
 app.use(bodyParser());
 
 app.listen(3000);
+
+console.log('i love 老黄');
