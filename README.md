@@ -1,5 +1,4 @@
-# ninja
-JavaScript Ninja
+# JavaScript
 npm install -g express-generator
 express -e
 npm install

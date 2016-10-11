@@ -2,28 +2,170 @@
 <html>
 <head>
 	<title><%= title %></title>
-	<link rel='stylesheet' href='/stylesheets/style.css' />
+	<link rel="stylesheet" href="/highlight/styles/monokai-sublime.css">
+	<link rel="stylesheet" href="/stylesheets/style.css">
+	<script src='/highlight/highlight.pack.js'></script>
+	<script src='/jquery/v1.11.1/jquery.min.js'></script>
 </head>
 <body>
 	<header>
-		<h1><%= title %></h1>
-		<ul class="type" id="type">
-			<li data-type="dot">Dot</li>
-			<li data-type="column" class="selected">Column</li>
-		</ul>
-		<p>
-			Volume <input type="range" id="volume" min="0" max="100" value="60">
-		</p>
+		<h5>第23章 离线应用与客户端存储</h5>
 	</header>
-	<div class="left">
-		<ul id="list">
-			<% music.forEach(function(name){ %>
-			<li title="<%= name %>"><%= name %></li>
-			<% }) %>
-		</ul>
-	</div>
-	<div class="right" id="box"></div>
-	<script src="/javascripts/musicVisualizer.js"></script>
-	<script src="/javascripts/index.js"></script>
+	<main>
+		<ol>
+			<li>离线检测：navigator.onLine</li>
+		<pre><code class="javascript">
+		EventUtil.addHandler(window, 'online', function(){
+			alert('online');
+		});
+		EventUtil.addHandler(window, 'offline', function(){
+			alert('offline');
+		});
+		</code></pre>
+			<li>应用缓存：applicationCache对象</li>
+		<pre><code class="html">
+		&lt;html manifest="/offline.appcache"&gt;
+		</code></pre>
+		<pre><code class="javascript">
+		EventUtil.addHandler(applicationCache, 'updateready', function(){
+			applicationCache.swapCache();
+		})
+		</code></pre>
+			<li>数据存储：cookie</li>
+		<pre><code class="html">
+		1、限制：每个域名下个数和大小（4096B）
+		2、构成：名称（URL编码、不区分大小写）、值（URL编码）、域（子域有效）、路径、失效时间、安全标志
+		eg: Set-Cookie: name=value; expires=Mon,22-Jan-07 07:10:24 GMT; domian=wrox.com; path=/; secoure
+		</code></pre>
+		<pre><code class="javascript">
+		var CoookieUtil = {
+			get: function(name){
+				var cookieName = encodeURIComponent(name) + '=',
+					cookieStart = document.cookie.indexOf(cookieName),
+					cookieValue = null;
+				if(cookieStart > -1){
+					var cookieEnd = document.cookie.indexOf(';',cookieStart);
+					if(cookieEnd == -1){
+						cookieEnd = document.cookie.length;
+					}
+					cookieValue = decodeURIComponent(document.cookie.substring(cookieStart + cookieName.length, cookieEnd));
+				}
+				return cookieValue;
+			},
+			set: function(name, value, expires, path, domain, secure){
+				var cookieText = encodeURIComponent(name) + '=' + encodeURIComponent(value);
+				if(expires instanceof Date){
+					cookieText += '; expires=' + expires.toGMTString();
+				}
+				if(path){
+					cookieText += '; path=' + path;
+				}
+				if(domain){
+					cookieText += '; domain=' + domain;
+				}
+				if(secure){
+					cookieText += '; secure';
+				}
+				document.cookie = cookieText;
+			},
+			unset: function(name, path, domain, secure){
+				this.set(name,'',new Date(0),path,domain,secure);
+			}
+		};
+		</code></pre>
+		<pre><code class="javascript">
+		子cookie： name=name1=value1&name2=value2&name3=value3&name4=value4&name5=value5
+		var SubCookieUtil = {
+			get: function(name, subName){
+				var subCookies = this.getAll(name);
+				if(subCookies){
+					return subCookies[subName];
+				}else{
+					return null;
+				}
+			},
+			getAll: function(name){
+				var cookieName = encodeURIComponent(name) + '=',
+					cookieStart = document.cookie.indexOf(cookieName),
+					cookieValue = null,
+					cookieEnd,
+					subCookies,
+					i,
+					parts,
+					result = {};
+				if(cookieStart > -1){
+					cookieEnd = document.cookie.indexOf(';', cookieStart);
+					if(cookieEnd == -1){
+						cookieEnd = document.cookie.length;
+					}
+					cookieValue = document.cookie.substring(cookieStart + cookieName.length, cookieEnd);
+					if(cookieValue.length > 0){
+						subCookies = cookieValue.split('&');
+						for(i = 0, len = subCookies.length; i < len; i++){
+							parts = subCookies[i].split('=');
+							result[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1]);
+						}
+						return result;
+					}
+				}
+				return null;
+			},
+			set: function(name, subName, value, expires, path, domain, secure){
+				var subcookies = this.getAll(name) || {};
+				subcookies[subName] = value;
+				this.setAll(name, subcookies, expires, path, domain, secure);
+			},
+			setAll: function(name, subcookies, expires, path, domain, secure){
+				var cookieText = encodeURIComponent(name) + '=',
+					subcookieParts = [],
+					subName;
+				for(subName in subcookies){
+					if(subName.length > 0 && subcookies.hasOwnProperty(subName)){
+						subcookieParts.push(encodeURIComponent(subName) + '=' + encodeURIComponent(subcookies[subName]));
+					}
+				}
+
+				if(subcookieParts.length){
+					cookieText += subcookieParts.join('&');
+					if(expires instanceof Date){
+						cookieText += '; expires=' + expires.toGMTString(); 
+					}
+					if(path){
+						cookieText += '; path=' + path;
+					}
+					if(domain){
+						cookieText += '; domain=' + domain;
+					}
+					if(secure){
+						cookieText += '; secure';
+					}
+				}else{
+					cookieText += '; expires=' + (new Date(0)).toGMTString();
+				}
+				document.cookie = cookieText;
+			},
+			unset: function(name, subName, path, domain, secure){
+				var subcookies = this.getAll(name);
+				if(subcookies){
+					delete subcookies[subName];
+					this.setAll(name, subcookies, null, path, domain, secure);
+				}
+			},
+			unsetAll: function(name, path, domain, secure){
+				this.setAll(name, null, new Date(0), path, domain, secure);
+			}
+		};
+		</code></pre>
+		</ol>
+		
+	</main>
+	<script>
+	hljs.initHighlightingOnLoad();
+
+	
+	</script>
 </body>
 </html>
+
+
+     
