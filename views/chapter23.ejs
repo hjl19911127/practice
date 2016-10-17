@@ -36,6 +36,7 @@
 		1、限制：每个域名下个数和大小（4096B）
 		2、构成：名称（URL编码、不区分大小写）、值（URL编码）、域（子域有效）、路径、失效时间、安全标志
 		eg: Set-Cookie: name=value; expires=Mon,22-Jan-07 07:10:24 GMT; domian=wrox.com; path=/; secoure
+		3、http only Cookie
 		</code></pre>
 		<pre><code class="javascript">
 		var CoookieUtil = {
@@ -74,7 +75,7 @@
 		};
 		</code></pre>
 		<pre><code class="javascript">
-		子cookie： name=name1=value1&name2=value2&name3=value3&name4=value4&name5=value5
+		//子cookie： name=name1=value1&name2=value2&name3=value3&name4=value4&name5=value5
 		var SubCookieUtil = {
 			get: function(name, subName){
 				var subCookies = this.getAll(name);
@@ -155,6 +156,110 @@
 				this.setAll(name, null, new Date(0), path, domain, secure);
 			}
 		};
+		</code></pre>
+			<li>数据存储：Web存储机制</li>
+		<pre><code class="javascript">
+			sessionStorage.setItem('name', 'Nicholas');
+			var name = sessionStorage.getItem('name');
+
+			for(var i = 0, len = sessionStorage.length; i < len; i++){
+				var key = sessionStorage.key(i);
+				var value = sessionStorage.getItem(key);
+				alert(key + '=' + value);
+			}
+
+			for(var key in sessionStorage){
+				var value = sessionStorage.getItem(key);
+				alert(key + '=' + value);
+			}
+
+			sessionStorage.removeItem('book');
+		</code></pre>
+		<pre><code class="javascript">
+			//跨越会话存储数据，同源策略，被localStorage取代
+			globalStorage['www.wrox.com'].name = 'Nicholas';
+			globalStorage['www.wrox.com'].book = 'Professional JavaScript';
+			globalStorage['www.wrox.com'].removeItem('name');
+			var book = globalStorage['www.wrox.com'].getItem('book');
+		</code></pre>
+		<pre><code class="javascript">
+			//限制2.5M-5M
+			//要访问同一个 localStorage 对象，页面必须来自同一个域名（子域名无效），使用同一种协议，在同一个端口上
+			localStorage.setItem('name', 'Nicholas');
+			var name = localStorage.getItem('name');
+
+			//兼容只支持globalStorage的浏览器
+			function getLocalStorage(){
+				if(type of localStorage == 'object'){
+					return localStorage;
+				}else if(typeof globalStorage == 'object'){
+					return globalStorage[location.host];
+				}else{
+					throw new Error('Local storage not available');
+				}
+			}
+			var storage = getLocalStorage();
+			//storage事件
+			EventUtil.addHandler(document, 'storage', function(event){
+				alert('Storage changed for ' + event.domain);
+			});
+		</code></pre>
+			<li>数据存储：IndexedDB</li>
+		<pre><code class="javascript">
+			//数据库
+			var indexedDB = window.indexedDB || window.msIndexedDB || window.mozIndexedDB || window.webkitIndexedDB;
+
+			var request, database;
+			request = indexedDB.open('admin');
+			request.onerror = function(event){
+				alert('something bad heppened while trying to open: ' + event.target.errorCode);
+			};
+			request.onsuccess = function(event){
+				database = event.target.result;
+			}
+
+			if(database.version != '1.0'){
+				request = database.setVersion('1.0');
+				request.onerror = function(event){
+					alert('Something bad happened while trying to set version: ' + event.target.errorCode);
+				}
+				request.onsuccess = function(event){
+					alert('Database initialization complete. Database name: ' + database.name + ', Version: ' + database.version);
+				}
+			}else{
+				alert('Database already initialized. Database name: ' + database.name + ', Version: ' + database.version);
+			}
+
+			var users = [{
+				username: '007',
+				firstName: 'James',
+				lastName: 'Bond',
+				password: 'foo'
+			},{
+				username: '008',
+				firstName: 'Su',
+				lastName: 'Jun',
+				password: '123'
+			}];
+
+			//对象存储空间
+			//事务
+			var IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction; 
+			var store = database.createObjectStore('users', {keyPath: 'username'}).transaction('users', IDBTransaction.READ_WRITE); // 数组传递多个['users','anotherStore']
+
+			
+
+			var i = 0, request, requests = [], len = users.length;
+			while(i < len){
+				request = store.add(users[i++]);
+				request.onerror = function(){
+
+				}
+				request.onsuccess = function(){
+
+				}
+				requests.push(request);
+			}
 		</code></pre>
 		</ol>
 		
