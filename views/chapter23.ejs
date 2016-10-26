@@ -204,7 +204,7 @@
 				alert('Storage changed for ' + event.domain);
 			});
 		</code></pre>
-			<li>数据存储：IndexedDB</li>
+			<li>数据存储：IndexedDB<a href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB" target="_blank">参考资料</a></li>
 		<pre><code class="javascript">
 			//数据库
 			var indexedDB = window.indexedDB || window.msIndexedDB || window.mozIndexedDB || window.webkitIndexedDB;
@@ -244,30 +244,16 @@
 
 			//对象存储空间
 			//事务
-			var IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction; 
-			var store = database.createObjectStore('users', {keyPath: 'username'}).transaction('users', IDBTransaction.READ_WRITE); // 数组传递多个['users','anotherStore']
-
-			
-
-			var i = 0, request, requests = [], len = users.length;
-			while(i < len){
-				request = store.add(users[i++]);
-				request.onerror = function(){
-
-				}
-				request.onsuccess = function(){
-
-				}
-				requests.push(request);
+			request.onupradeneeded = function(event){
+				var database = event.target.result;
+				var IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction; 
+				var store = database.createObjectStore('users', {keyPath: 'username'}).transaction('users', IDBTransaction.READ_WRITE); // 数组传递多个['users','anotherStore']
 			}
-		</code></pre>
 		</ol>
-		
 	</main>
 	<script>
 	hljs.initHighlightingOnLoad();
 
-	
 	</script>
 </body>
 </html>
