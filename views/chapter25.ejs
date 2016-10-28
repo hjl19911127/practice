@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%= title %></title>
+	<link rel="stylesheet" href="/highlight/styles/monokai-sublime.css">
+	<link rel="stylesheet" href="/stylesheets/style.css">
+	<script src='/highlight/highlight.pack.js'></script>
+	<script src='/jquery/v1.11.1/jquery.min.js'></script>
+</head>
+<body>
+	<header>
+		<h5>第24章 新兴的API</h5>
+	</header>
+	<main>
+		<ol>
+			<li>requestAinmationFrame：有一个动画开始了</li>
+			<pre><code class="javascript">
+			//requestAnimationFrame()方法接收一个参数，即在重绘屏幕前调用的一个函数
+			(function(){
+				function draw(timestamp){
+					//计算两次重绘的时间间隔
+					var drawStart = (timestamp || Date.now()),
+						diff = drawStart - startTime; //使用diff确定下一步的绘制时间
+
+					//把startTime重写为这一次的绘制时间
+					startTime = drawStart;
+
+					//重绘UI
+					requestAnimationFrame(draw);
+				}
+				var requestAnimationFrame = window.requestAnimationFrame ||
+											window.mozRequestAnimationFrame ||
+											window.webkitRequestAnimationFrame ||
+											window.msRequestAnimationFrame,
+					startTime = window.mozAnimationStartTime || Date.now();
+				requestAnimationFrame(draw);
+			})();
+			</code></pre>
+			<li>Page Visibility API
+				<ul>
+					<li>document.hidden 表示页面是否隐藏的布尔值</li>
+					<li>document.visibilityState 表示4中状态（页面在后台标签页中或浏览器最小化、页面在前台标签页中、实际的页面已经隐藏，但用户可以看到页面的预览、页面在屏幕外执行预渲染处理）<br>chrome下：hidden visible prerender</li>
+					<li>visibilitychange事件</li>
+				</ul>
+			</li>
+			<pre><code class="javascript">
+			function isHiddenSupported(){
+				return typeof (document.hidden || document.msHidden || document.webkitHidden);
+			}
+
+			function handleVisibiletyChange(){
+				var output = document.getElementById('output'),
+					msg;
+				if(document.hidden || document.msHidden || document.webkitHidden){
+					msg = 'Page is now hidden. ' + (new Date());  
+				}else{
+					msg = 'Page is now visible. ' + (new Date());
+				}
+				output.innerHTML += msg;
+			}
+			EventUtil.addHandler(document, 'msvisibilitychange', handleVisibilityChange);
+			EventUtil.addHandler(document, 'webkitvisibilitychange', handleVisibilityChange);
+			</code></pre>
+		</ol>
+	</main>
+	<script>
+	hljs.initHighlightingOnLoad();
+
+	</script>
+</body>
+</html>
+
+
+          
