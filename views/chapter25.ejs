@@ -6,10 +6,11 @@
 	<link rel="stylesheet" href="/stylesheets/style.css">
 	<script src='/highlight/highlight.pack.js'></script>
 	<script src='/jquery/v1.11.1/jquery.min.js'></script>
+	<script src='/javascripts/EventUtil.js'></script>
 </head>
 <body>
 	<header>
-		<h5>第24章 新兴的API</h5>
+		<h5>第25章 新兴的API</h5>
 	</header>
 	<main>
 		<ol>
@@ -61,11 +62,216 @@
 			EventUtil.addHandler(document, 'msvisibilitychange', handleVisibilityChange);
 			EventUtil.addHandler(document, 'webkitvisibilitychange', handleVisibilityChange);
 			</code></pre>
+			<li>Geolocation API</li>
+			<ul>
+				<li>navigator.geolocation</li>
+				<li>getCurrentPosition(): 
+				<ul>
+					<li>成功回调: 返回Position对象（coords, timestamp)</li>
+					<li>失败回调（可选）: 返回一个对象（message，code：1、拒绝共享；2、位置无效；3、超时</li>
+					<li>选项对象（可选）: boolean enableHighAccuracy 最准确的位置信息; ms timeout; ms maximunAge 坐标信息的有效时间</li>
+				</ul>
+				</li>
+				<li>watchPosition():</li>
+			</ul>
+			<pre><code>
+			navigator.geolocation.getCurrentPosition(
+				function(position){
+					console.log(position.coords.latitude, position.coords.longitude);
+				},
+				function(error){
+					console.log('ERROR CODE: ' + error.code);
+					console.log('Error message: ' + error.message);
+				},
+				{
+					enableHighAccuracy: true, // 耗电
+					timeout: 5000,
+					maximunAge: 25000  // Infinity
+
+				});
+
+			var watchId = navigator.geolocation.watchPosition(
+				function(position){
+					console.log(position.coords.latitude, position.coords.longitude);
+				},
+				function(error){
+					console.log('ERROR CODE: ' + error.code);
+					console.log('Error message: ' + error.message);
+				});
+			navigator.geolocation.clearWatch(watchId);
+			</code></pre>
+			<li>File API</li>
+			<ul>
+				<li>files集合：name size type lastModifiedDate</li>
+				<li>FileReader类型</li>
+				<li>读取部分内容: slice()</li>
+				<li>对象URL</li>
+				<li>读取拖放的文件</li>
+				<li>使用XHR上传文件</li>
+			</ul>
+			<input type="file" id="files-list">
+			<div id="progress"></div>
+			<div id="output"></div>
+			<pre><code>
+			var fileList = document.getElementById('files-list');
+			fileList.onchange = function(event){
+				var files = event.files, i = 0, len = files.length;
+				while(i < len){
+					console.log(files[i].name + ' (' + files[i].type + ', ' + files[i].size + ' bytes) ');
+					i++;
+				}  
+			}
+			EventUtil.addHandler(fileList, 'change', function(event){
+				var info = '', output = document.getElementById('output'), progress = document.getElementById('progress'),
+				files = EventUtil.getTarget(event).files, type = 'default', reader = new FileReader(),blob = blobSlice(files[0],0,32);
+				if(/image/.test(files[0].type)){
+					reader.readAsDataURL(files[0]);
+					type = 'image';
+				}else{
+					reader.readAsText(files[0]);
+					type = 'text';
+				}
+
+				reader.onerror = function(){
+					output.innerHTML = 'Could not read file, error code is ' + reader.error.code; // 1 未找到文件；2 安全性错误；3 读取中断；4 文件不可读；5 编码错误
+				}
+
+				reader.onprogress = function(event){
+					if(event.lengthComputable){
+						progress.innerHTML = event.loaded + '/' + event.total;
+					}
+				}
+
+				reader.onload = function(){
+					var html = '';
+					switch(type){
+						case 'image':
+							html = "&lt;img src=\"" + reader.result + "\"&gt;";
+							break;
+						case 'text':
+							html = reader.result;
+							break;
+					}
+					output.innerHTML = html;
+				}
+
+			});
+			//读取部分内容
+			function blobSlice(blob, startByte, length){
+				if(blob.slice){
+					return blob.slice(startByte, length); 
+				}else if(blob.webkitSlice){
+					return blob.webkitSlice(startByte, length);
+				}else if(blob.mozSlice){
+					return blob.mozSlice(startByte, length);
+				}else{
+					return null;
+				}
+			}
+			</code></pre>
+			<pre><code>
+			//对象URL
+			function createObjectURL(blob){
+				if(window.URL){
+					return window.URL.createObjectURL(blob);
+				}else if(window.webkitURL){
+					return window.webkitURL.createObjectURL(blob);
+				}else{
+					return null;
+				}
+			}
+			var filesList = document.getElementById('files-list');
+			EventUtil.addHandler(filesList, 'change', function(event){
+				var info = '',
+					output = document.getElementById('output'),
+					progress = document.getElementById('progress'),
+					files = EventUtil.getTarget(event).files,
+					reader = new FileReader(),
+					url = createObjectURL(files[0]);
+				if(url){
+					if(/image/.test(file[0].type)){
+						output.innerHTML = '&lt;img src ="'+url+'"&gt;'
+					}else{
+						output.innerHTML = 'Not an image.';
+					}
+				}else{
+					output.innerHTML = "Your browser doesn't support object URLs."
+				}
+				//释放内存
+				function revokeObjectURL(url){
+					if(window.URL){
+						window.URL.revokeObjectURL(url);
+					}else if(window.webkitURL){
+						window.webkitURL.revokeObjectURL(url);
+					}
+				}
+			})
+			</code></pre>
+			<div id="droptarget" style="width:200px;height:200px;border:1px solid yellowgreen;"></div>
+			<div id="show1"></div>
+			<pre><code class="javascript">
+			//读取拖放的文件
+			var droptarget = document.getElementById('droptarget');
+			function handlerEvent(event){
+				var info = '',
+					output = document.getElementById('show1'),
+					files, i, len, 
+					xhr, data;
+				EventUtil.preventDefault(event);
+				if(event.type === 'drop'){
+					data = new FormData();
+					files = event.dataTransfer.files;
+					i = 0;
+					len = files.length;
+					while(i<len){
+						data.append('file'+i, files[i]);
+						info += files[i].name + ' (' + files[i].type + ', ' + files[i].size + ' bytes)<br>';
+						i++;
+					}
+					output.innerHTML = info;
+					xhr = new XMLHttpRequest();
+					xhr.open('post', 'FileAPIExampleUpload.php', true);
+					xhr.onreadystatechange = function(){
+						if(xhr.readyState === 4){
+							console.log(xhr.responseText);
+						}
+					};
+					xhr.send(data);
+				}
+			}
+			EventUtil.addHandler(droptarget, 'dragenter', handlerEvent);
+			EventUtil.addHandler(droptarget, 'dragover', handlerEvent);
+			EventUtil.addHandler(droptarget, 'drop', handlerEvent);
+			</code></pre>
+			<li>Web计时:window.performance</li>
+			<li>Web Worker(略)</li>
 		</ol>
 	</main>
 	<script>
-	hljs.initHighlightingOnLoad();
-
+	window.onload = function(){
+		hljs.initHighlightingOnLoad();
+		var droptarget = document.getElementById('droptarget');
+		function handlerEvent(event){
+			var info = '',
+				output = document.getElementById('show1'),
+				files, i, len;
+			EventUtil.preventDefault(event);
+			if(event.type === 'drop'){
+				files = event.dataTransfer.files;
+				i = 0;
+				len = files.length;
+				while(i<len){
+					info += files[i].name + ' (' + files[i].type + ', ' + files[i].size + ' bytes)<br>';
+					i++;
+				}
+				output.innerHTML = info;
+			}
+		}
+		EventUtil.addHandler(droptarget, 'dragenter', handlerEvent);
+		EventUtil.addHandler(droptarget, 'dragover', handlerEvent);
+		EventUtil.addHandler(droptarget, 'drop', handlerEvent);
+	}
+	
 	</script>
 </body>
 </html>
