@@ -3,7 +3,7 @@ var router = express.Router();
 
 
 router.get('/', function(req, res) {
-	res.render('chapter25', {title: 'JavaScript高级程序设计'});
+	res.render('chapter22', {title: '高级技巧'});
 });
 
 router.get('/chapter23', function(req, res) {
@@ -18,4 +18,7 @@ router.get('/chapter25', function(req, res) {
 	res.render('chapter25', {title: 'JavaScript高级程序设计'});
 });
 
+router.get('/chapter22', function(req, res) {
+	res.render('chapter22', {title: '高级技巧'});
+});
 module.exports = router;  
