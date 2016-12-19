@@ -98,9 +98,73 @@
 						}
 					})();
 					</code></pre>
+					<li>函数绑定</li>
+					<pre><code class="javascript">
+					function bind(fn, context){
+						return function(){
+							return fn.apply(context, arguments);
+						}
+					}
+					var handler = {
+						message: 'Event handled',
+						handleClick: function(event){
+							alert(this.message + ':' + event.type);
+						}
+					};
+					var btn = document.getElementById('my-btn');
+					EventUtil.addHandler(btn,'click',bind(handler.handleClick, handler));
+					EventUtil.addHandler(btn,'click',handler.handleClick.bind(handler)); // es5 原始bind
+					</code></pre>
+					<li>函数柯里化</li>
+					<pre><code class="javascript">
+					function curry(fn){
+						var args = Array.prototype.slice.call(arguments,1);
+						return function(){
+							var innerArgs = Array.prototype.slice.call(arguments);
+							var finalArgs = args.concat(innerArgs);
+							return fn.apply(null, finalArgs);
+						}
+					}
+					function add(num1, num2){
+						return num1 + num2;
+					}
+					var curriedAdd = curry(add, 5); // curry(add, 5, 12);
+					console.log(curriedAdd(3));
+					</code></pre>
+					<pre><code class="javascript">
+					function bind(fn, context){
+						var args = Array.prototype.slice.call(arguments, 2);
+						return function(){
+							var innerArgs = Array.prototype.slice.call(arguments);
+							var finalArgs = args.concat(innerArgs);
+							return fn.apply(context, finalArgs);
+						}
+					}
+					var hanlder = {
+						message: 'Event handled',
+						handleClick: function(name, event){
+							console.log(this.message + ':' + name + ':' +event.type);
+						}
+					};
+					var btn = document.getElementById('my-btn');
+					EventUtil.addHandler(btn,'click',bind(handler.handleClick, handler, 'my-btn'));
+					EventUtil.addHandler(btn,'click',handler.handleClick.bind(handler, 'my-btn')); //es5 bind
+					</code></pre>
 				</ul>
 			</li>
-
+			<li>防篡改对象
+				<ul>
+					<li>不可扩展对象:可以修改和删除已有的成员</li>
+					<pre><code class="javascript">
+					var person = {name:'Nicholas'};
+					Object.preventExtensions(person);
+					person.age = 29;
+					console.log(person.age);
+					console.log(Object.isExtensible(person));
+					</code></pre>
+					<li>密封对象:不可扩展、不能删除属性和方法、属性值可修改 </li>
+				</ul>
+			</li>
 		</ol>
 	</main>
 	<script>

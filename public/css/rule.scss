@@ -1,0 +1,31 @@
+@import 'common.scss';
+body,
+html {
+    background: #f0f1f2;
+}
+
+.uc-container1 {
+    color: #666;
+    .title {
+        text-align: center;
+        font-size: 24px;
+        line-height: 1;
+        padding: 40px 0;
+        border-bottom: 1px solid #dadada;
+    }
+    font-size: 14px;
+    background: #fff;
+    .password-container {
+        padding: 0 40px;
+        h2{
+            font-size: 18px;
+            margin: 40px 0;
+        }
+        li,p{
+            line-height: 2.4;
+        }
+        p{
+            text-indent: 2em;
+        }
+    }
+}

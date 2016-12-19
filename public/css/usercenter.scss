@@ -1,0 +1,457 @@
+@import 'common.scss';
+body,
+html {
+    background: #f0f1f2;
+}
+
+.uc-container {
+    @extend %form;
+    .group {
+        .control {
+            width: 320px;
+        }
+    }
+    .nav-bar {
+        width: 290px;
+        float: left;
+        min-height: 865px;
+        background: #fff;
+        border-radius: 4px;
+        margin: 0 10px 0 0;
+        font-size: 16px;
+        color: #666;
+    }
+    .user-info {
+        background: #fafbfb;
+        padding: 25px 45px;
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 0 10px 0 0;
+            float: left;
+        }
+        .user-name {
+            width: 140px;
+            line-height: 50px;
+            float: left;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+    }
+    .nav-list {
+        text-align: center;
+        li {
+            cursor: pointer;
+            padding: 30px 0;
+            border-bottom: 1px solid #f4f5f7;
+            position: relative;
+            a {
+                font-size: 16px;
+                color: #666;
+                &:before {
+                    content: '';
+                    position: absolute;
+                    width: 22px;
+                    height: 22px;
+                    left: 70px;
+                    @extend %ico;
+                }
+            }
+            i {
+                position: absolute;
+                top: 36px;
+                right: 85px;
+                @include arrow(6px, #fff, 'right');
+            }
+            .safe {
+                &:before {
+                    top: 34px;
+                    background-position: -40px 0;
+                }
+            }
+            .header {
+                &:before {
+                    top: 32px;
+                    background-position: -40px -25px;
+                }
+            }
+            .info {
+                &:before {
+                    top: 32px;
+                    background-position: -40px -50px;
+                }
+            }
+            .account {
+                &:before {
+                    top: 32px;
+                    background-position: -40px -75px;
+                }
+            }
+            .mobile {
+                &:before {
+                    top: 32px;
+                    background-position: -300px -220px;
+                }
+            }
+            .email {
+                &:before {
+                    top: 34px;
+                    background-position: -300px -190px;
+                }
+            }
+            &.current,
+            &:hover {
+                a {
+                    color: $bule;
+                }
+                i {
+                    border-color: transparent transparent transparent $bule;
+                }
+                .safe {
+                    &:before {
+                        background-position: 0 0;
+                    }
+                }
+                .header {
+                    &:before {
+                        background-position: 0 -25px;
+                    }
+                }
+                .info {
+                    &:before {
+                        background-position: 0 -50px;
+                    }
+                }
+                .account {
+                    &:before {
+                        background-position: 0 -75px;
+                    }
+                }
+                .email {
+                    &:before {
+                        background-position: -331px -190px;
+                    }
+                }
+                .mobile {
+                    &:before {
+                        background-position: -331px -220px;
+                    }
+                }
+            }
+        }
+    }
+    .content {
+        min-height: 865px;
+        float: right;
+        font-size: 14px;
+        color: #666;
+        background: #fff;
+        border-radius: 4px;
+        .title {
+            position: relative;
+            width: 844px;
+            font-size: 18px;
+            line-height: 1;
+            padding: 33px 28px;
+            border-bottom: 1px solid #f4f5f7;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            .subtitle {
+                position: absolute;
+                top: 28px;
+                right: 28px;
+                color: #b0b0b0;
+                font-size: 14px;
+            }
+        }
+        .body {
+            height: 650px;
+            padding: 60px 0 0 0;
+            overflow: hidden;
+        }
+        .item-container {
+            width: 800px;
+            height: 100%;
+            overflow: auto;
+            margin: 0 0 0 80px;
+            position: relative;
+            .item {
+                width: 703px;
+                border: 1px solid #dadada;
+                padding: 27px 15px 27px 20px;
+                margin: 20px 0 0 0;
+                position: relative;
+                &.active {
+                    border-color: $bule;
+                    .item-btn {
+                        &:before {
+                            @include arrow(6px, $bule, 'bottom');
+                        }
+                        &:hover {
+                            &:before {
+                                border-color: #fff transparent transparent;
+                            }
+                        }
+                    }
+                    .item-hd {
+                        padding: 0 0 27px 0;
+                        border-bottom: 1px solid #dadada;
+                    }
+                }
+            }
+            .item-title {
+                width: 56px;
+                float: left;
+                margin: 0 50px 0 0;
+            }
+            .item-content {
+                float: left;
+                max-width: 450px;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                .unvalid {
+                    margin: 0 0 0 10px;
+                    color: $bule;
+                }
+            }
+            .item-btn {
+                color: $bule;
+                padding: 7px 40px 7px 20px;
+                border: 1px solid $bule;
+                background: #eaf5ff;
+                position: absolute;
+                top: 19px;
+                right: 15px;
+                cursor: pointer;
+                &:before {
+                    content: '';
+                    width: 6px;
+                    height: 6px;
+                    position: absolute;
+                    @include arrow(6px, $bule, 'top');
+                    right: 20px;
+                    top: 15px;
+                }
+                &:hover {
+                    background: $bule;
+                    color: #fff;
+                    &:before {
+                        border-color: transparent transparent #fff;
+                    }
+                }
+            }
+            .item-bd {
+                padding: 27px 0 0 0;
+                .done {
+                    padding: 130px 0 25px 0;
+                    text-align: center;
+                    font-size: 16px;
+                    position: relative;
+                    &:before {
+                        content: '';
+                        width: 76px;
+                        height: 76px;
+                        position: absolute;
+                        top: 33px;
+                        left: 50%;
+                        margin-left: -38px;
+                        @extend %ico;
+                        background-position: -100px 0;
+                    }
+                    .btn {
+                        margin: 25px auto 0;
+                        @include button(226px, 36px, 14px, $bule, #fff, 4px, #288fe5);
+                    }
+                }
+                .done-horizon {
+                    padding: 34.5px 0;
+                    text-indent: 250px;
+                    font-size: 16px;
+                    position: relative;
+                    &:before {
+                        content: '';
+                        width: 76px;
+                        height: 76px;
+                        position: absolute;
+                        top: 0px;
+                        left: 150px;
+                        @extend %ico;
+                        background-position: -100px 0;
+                    }
+                }
+                .foot {
+                    .icon-container {
+                        margin: 7px 0 0 0;
+                        i {
+                            float: left;
+                            @extend %ico;
+                            width: 60px;
+                            height: 60px;
+                            vertical-align: middle;
+                        }
+                        .icon-qq {
+                            background-position: 0 -143px;
+                        }
+                        .icon-rel {
+                            width: 43px;
+                            height: 25px;
+                            margin: 20px 25px;
+                            background-position: -100px -100px;
+                        }
+                        .icon-up {
+                            background-position: -100px -240px;
+                        }
+                        .icon-wx {
+                            background-position: 0 -240px;
+                        }
+                        .icon-sina {
+                            background-position: -100px -143px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .register {
+        .group {
+            .control {
+                padding: 0 18px;
+                width: 350px;
+                height: 48px;
+                .input {
+                    width: 245px;
+                    line-height: 48px;
+                    height: 48px;
+                }
+                .label {
+                    width: 105px;
+                    height: 48px;
+                    line-height: 48px;
+                }
+                .select {
+                    position: absolute;
+                    right: 0;
+                    bottom: 0;
+                    padding: 14px 0;
+                    line-height: 48px;
+                    width: 265px;
+                }
+            }
+            .phone {
+                &.label-phone {
+                    .input {
+                        width: 150px;
+                    }
+                }
+            }
+            .placeholder {
+                &.label-placeholder {
+                    left: 123px;
+                }
+                top: 13px;
+            }
+            .tip {
+                left: 430px;
+                top: 13px;
+            }
+            .submit-btn {
+                font-size: 16px;
+                width: 388px;
+                height: 46px;
+                line-height: 46px;
+            }
+            .code {
+                height: 43px;
+                line-height: 43px;
+            }
+        }
+    }
+}
+
+.uc-container1 {
+    font-size: 14px;
+    background: #fff;
+    .content {
+        float: none;
+        height: auto;
+        padding: 0 0 60px 0;
+        .body {
+            height: auto;
+        }
+        .register {
+            .head {
+                font-size: 30px;
+                color: $bule;
+                padding: 0 0 15px 0;
+            }
+        }
+    }
+    .password {
+        margin: 100px 0 100px 405px;
+    }
+    .password-container {
+        padding: 0 40px;
+        .password {
+            margin-left: 365px;
+        }
+        .title {
+            font-size: 16px;
+            line-height: 1;
+            padding: 35px 0;
+            border-bottom: 1px solid #dadada;
+        }
+        .detail {
+            font-weight: bold;
+            margin: 0 5px;
+        }
+        .done {
+            font-size: 16px;
+            line-height: 32px;
+            text-align: center;
+            padding: 228px 0 140px 0;
+            position: relative;
+            &:before {
+                content: '';
+                position: absolute;
+                top: 150px;
+                left: 50%;
+                margin-left: -40px;
+                width: 80px;
+                height: 66px;
+                @extend %ico;
+            }
+            &.email {
+                &:before {
+                    background-position: -300px 0;
+                }
+            }
+            &.failed {
+                &:before {
+                    top: 130px;
+                    height: 80px;
+                    background-position: -200px 0;
+                }
+            }
+            &.success {
+                &:before {
+                    top: 130px;
+                    height: 80px;
+                    background-position: -99px 0;
+                }
+            }
+            .resend-btn {
+                margin: 40px auto 0;
+                @include button(206px, 46px, 16px, $bule, #fff, 3px, #288fe5);
+            }
+        }
+        .foot {
+            padding: 25px 0;
+            text-align: center;
+            border-top: 1px solid #dadada;
+        }
+    }
+}

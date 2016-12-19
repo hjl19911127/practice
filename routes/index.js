@@ -21,4 +21,20 @@ router.get('/chapter25', function(req, res) {
 router.get('/chapter22', function(req, res) {
 	res.render('chapter22', {title: '高级技巧'});
 });
+
+router.get('/uc', function(req, res) {
+	res.render('usercenter', {title: '高级技巧'});
+});
+router.get('/login', function(req, res) {
+	res.render('login', {title: '高级技巧'});
+});
+router.get('/password', function(req, res) {
+	res.render('password', {title: '高级技巧'});
+});
+router.get('/register', function(req, res) {
+	res.render('register', {title: '高级技巧'});
+});
+router.get('/rule', function(req, res) {
+	res.render('rule', {title: '高级技巧'});
+});
 module.exports = router;  
