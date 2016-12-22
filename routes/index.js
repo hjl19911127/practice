@@ -3,7 +3,7 @@ var router = express.Router();
 
 
 router.get('/', function(req, res) {
-	res.render('chapter22', {title: '高级技巧'});
+	res.render('chapter20', {title: 'JSON'});
 });
 
 router.get('/chapter23', function(req, res) {
@@ -20,6 +20,14 @@ router.get('/chapter25', function(req, res) {
 
 router.get('/chapter22', function(req, res) {
 	res.render('chapter22', {title: '高级技巧'});
+});
+
+router.get('/chapter21', function(req, res) {
+	res.render('chapter21', {title: 'Ajax 与 Comet'});
+});
+
+router.get('/chapter20', function(req, res) {
+	res.render('chapter20', {title: 'JSON'});
 });
 
 router.get('/uc', function(req, res) {
