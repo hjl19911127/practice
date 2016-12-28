@@ -3,7 +3,7 @@ var router = express.Router();
 
 
 router.get('/', function(req, res) {
-	res.render('chapter20', {title: 'JSON'});
+	res.render('chapter16', {title: 'HTML5 脚本编程'});
 });
 
 router.get('/chapter23', function(req, res) {
@@ -28,6 +28,14 @@ router.get('/chapter21', function(req, res) {
 
 router.get('/chapter20', function(req, res) {
 	res.render('chapter20', {title: 'JSON'});
+});
+
+router.get('/chapter17', function(req, res) {
+	res.render('chapter17', {title: '错误处理与调试'});
+});
+
+router.get('/chapter16', function(req, res) {
+	res.render('chapter16', {title: 'HTML5 脚本编程'});
 });
 
 router.get('/uc', function(req, res) {

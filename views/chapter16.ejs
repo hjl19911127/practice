@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%= title %></title>
+	<link rel="stylesheet" href="/highlight/styles/tomorrow-night.css">
+	<link rel="stylesheet" href="/stylesheets/style.css">
+	<script src='/highlight/highlight.pack.js'></script>
+	<script src='/javascripts/EventUtil.js'></script>
+	<style>
+	.lower-alpha{
+		padding-top: 20px;
+		padding-bottom: 20px;
+		border-radius: 5px;
+		font-size: 14px;
+		line-height: 2;
+		background: #d9edf7;
+		list-style-type: lower-alpha;
+	}
+	</style>
+</head>
+<body>
+	<header>
+		<h5>第16章 HTML5 脚本编程</h5>
+	</header>
+	<main>
+		<ol>
+			<li>跨文档消息传递</li>
+			<pre><code class="javascript">
+			//JSON.stringify()
+			//域名为：http://www.wrox.com 父窗向子窗iframe（http://p2p.wrox.com）发送消息
+			var iframeWindow = document.getElementById('myframe').contentWindow;
+			iframeWinow.postMessage('A secret', 'http://p2p.wrox.com');
+			iframeWinow.postMessage('A secret', '*');
+			//子窗监听事件
+			EventUtil.addHandler(window, 'message', function(event){
+				if(event.origin == 'http://www.wrox.com'){
+					processMessage(event.data);
+					event.source.postMessage('Received!', 'http://www.wrox.com');
+				}
+			});
+			</code></pre>
+			<li>原生拖放</li>
+			<ul>
+				<li>拖动某元素：dragstart drag dragend</li>
+				<li>当某元素被拖动到一个有效的放置目标上时：dragenter dragover dragleave(drop)</li>
+				<li>自定义放置目标</li>
+				<pre><code class="javascript">
+				var droptarget = document.getElementById('droptarget');
+				EventUtil.addHandler(droptarget, 'dragover', function(event){
+					EventUtil.preventDefault(event);
+				});
+				EventUtil.addHandler(droptarget, 'dragenter', function(event){
+					EventUtil.perventDefault(event);
+				});
+				EventUtil.addHandler(droptarget, 'drop', function(event){
+					EventUtil.preventDefault(event);
+				});
+				</code></pre>
+				<li>dataTransfer对象: getData() setData() 'text/URL'允许指定各种 MIME
+类型</li>
+				<pre><code class="javascript">
+				event.dataTransfer.setData('text', 'some text');
+				var text = event.dataTransfer.getData('text');
+
+				event.dataTransfer.setData('URL','http://www.wrox.com');
+				var url = event.dataTransfer.getData('URL');
+				
+				//firefox火狐
+				var dataTransfer = event.dataTransfer;
+				var url = dataTransfer.getData('url') || dataTransfer.getData('text/uri-list');
+				var text = dataTransfer.getData('Text');
+				</code></pre>
+				<li>dataTransfer对象的两个属性：dropEffect（ondragenter）与effectAllowed（ondragstart）</li>
+				<li>可拖动：默认情况下，图片、链接和文本（选中）是可以拖动的。</li>
+				<pre><code class="html">
+				&lt;!-- 图像不能拖动 --&gt;
+				&lt;img src="smile.gif" alt="Smiley face" draggable='false'&gt;
+				&lt;!-- 可拖动 --&gt;
+				&lt;div draggable="true"&gt;...&lt;/div&gt;
+				</code></pre>
+				<li>dataTransfer的其他成员：addElement(element)，clearData(format)，setDragImage(element,x,y)，types</li>
+			</ul>
+			<li>媒体元素</li>
+			<ul>
+				<li>水印：poster controls：控制条</li>
+				<video id="myVideo" poster="/images/3.jpeg" controls>
+					<source src="conference.webm" type="video/webm; codecs='vp8, vorbis'">
+					<source src="conference.ogv" type="video/ogg; codecs='theora, vorbis'">
+					<source src="/media/L.mp4">
+					Video player not available.
+				</video>
+				<audio controls>
+					<source src="/media/小幸运_田馥甄.mp3" type="audio/mpeg">
+					<!-- <source src="song.ogg" type="audio/ogg"> -->
+					Audio player not available.
+				</audio>
+				<li>属性</li>
+				<img src="/images/16.3.1.jpg" alt="">
+				<li>事件</li>
+				<img src="/images/16.3.2.jpg" alt="">
+				<li>自定义媒体播放器</li>
+				<div class="mediaplayer">
+					<div class="video">
+						<video src="/media/L.mp4" poster="/images/3.jpeg" width="300" height="200" id="player" controls>
+							Video player not available.
+						</video>
+					</div>
+					<div class="controls">
+						<input type="button" value="Play" id="video-btn">
+						<span id="curtime">0</span>/<span id="duration">0</span>
+					</div>
+				</div>
+				<pre><code class="javascript">
+				var player = document.getElementById('player'),
+					btn = document.getElementById('video-btn'),
+					curtime = document.getElementById('curtime'),
+					duration = document.getElementById('duration');
+				EventUtil.addHandler(btn,'click',function(event){
+					if(player.paused){
+						player.play();
+						btn.value='Pause';
+					}else{
+						player.pause();
+						btn.value='Play'
+					}
+				});
+				setTimeout(function(){
+					if(player.currentTime&lt;player.duration){
+						curtime.innerHTML = player.currentTime;
+						setTimeout(arguments.callee, 250);
+					}
+					
+				},250);
+				player.ondurationchange= function(){
+					duration.innerHTML = player.duration;
+				}
+				</code></pre>
+				<li>检测编码器的支持情况</li>
+			</ul>
+
+		</ol>
+	</main>
+	<script>
+	
+   hljs.initHighlightingOnLoad();
+   window.onload=function(){
+   	var player = document.getElementById('player'),
+					btn = document.getElementById('video-btn'),
+					curtime = document.getElementById('curtime'),
+					duration = document.getElementById('duration');
+				
+				EventUtil.addHandler(btn,'click',function(event){
+					if(player.paused){
+						player.play();
+						btn.value='Pause';
+					}else{
+						player.pause();
+						btn.value='Play'
+					}
+				});
+				setTimeout(function(){
+					if(player.currentTime<player.duration){
+						curtime.innerHTML = player.currentTime;
+						setTimeout(arguments.callee, 250);
+					}
+					
+				},250);
+				player.ondurationchange= function(){
+					duration.innerHTML = player.duration;
+				}
+				
+   }
+	</script>
+</body>
+</html>
+
+     
