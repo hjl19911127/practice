@@ -20,12 +20,13 @@
 </head>
 <body>
 	<header>
-		<h5>使用 Canvas 绘图</h5>
+		<h5>使用 Canvas 绘图（未完待续）</h5>
 	</header>
 	<main>
 		<ol>
 			<li>基本用法</li>
 			<canvas id="drawing" width="200" height="200">A drawing of something.</canvas>
+			<img src="/images/3.jpeg" alt="">
 			<pre><code class="javascript">
 			var drawing = document.getElementById('drawing');
 			if(drawing.getContext){
@@ -97,6 +98,18 @@
 							<li>等想要回到之前保存的设置时，可以调用 restore()方法，在保存设置的栈结构中向前返回一级，恢复之前的状态。</li>
 						</ul>
 					</li>
+					<li>绘制图像：drawImage</li>
+					<li>阴影: shadowColor shadowOffsetX shadowOffsetY shadowBlur</li>
+					<li>渐变：createLinearGradient()
+					<pre><code class="javascript">
+					var gradient = context.createLinearGradient(30,30,70,70);
+					// var gradient = context.createRadialGradient(55,55,10,55,55,30);
+					gradient.addColorStop(0, 'white');
+					gradient.addColorStop(1, 'black');
+					context.fillStyle = gradient;
+					context.fillRect(30,30,50,05);
+					</code></pre>
+					</li>
 				</ul>
 			</li>
 		</ol>
@@ -145,6 +158,11 @@
 				var image = document.createElement('img');
 				image.src = imgURL;
 				document.body.appendChild(image);
+
+				var image = document.images[0];
+				//context.drawImage(image, 10, 10);
+				//context.drawImage(image,50,10,30,30);
+				context.drawImage(image, 0, 10, 50, 50, 0, 100, 40, 60);
 			}
 	}
 	</script>

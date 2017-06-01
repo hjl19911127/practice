@@ -56,8 +56,7 @@
 					EventUtil.preventDefault(event);
 				});
 				</code></pre>
-				<li>dataTransfer对象: getData() setData() 'text/URL'允许指定各种 MIME
-类型</li>
+				<li>dataTransfer对象: getData() setData() 'text/URL'允许指定各种 MIME类型</li>
 				<pre><code class="javascript">
 				event.dataTransfer.setData('text', 'some text');
 				var text = event.dataTransfer.getData('text');
@@ -135,42 +134,79 @@
 					duration.innerHTML = player.duration;
 				}
 				</code></pre>
-				<li>检测编码器的支持情况</li>
+				<li>检测编码器的支持情况
+				<ol class="lower-alpha">
+					<li>canPlayType(MIME类型和编解码器): probably，maybe，'' </li>
+				</ol>
+				<pre><code class="javascript">
+				var player = document.getElementById('player');
+				player.canPlayType('video/ogg'); //maybe
+				player.canPlayType('video/ogg;codecs="theora"'); //probably
+				</code></pre>
+				</li>
+				<li>Audio类型</li>
+				<ol class="lower-alpha">
+					<li>从同为DOM元素的角度看，Audio和Image很相似</li>
+					<li>但Audio不用像Image那样必须插入到文档中，只要创建一个新实例，并传入音频源文件即可。</li>
+				</ol>
+				<pre><code class="javascript">
+				var audio = new Audio('/media/小幸运_田馥甄.mp3');
+				EventUtil.addHanlder(audio, 'canplaythrough', function(event){
+					audio.play();
+				});
+				</code></pre>
 			</ul>
-
+			<li>历史状态管理：pushState，popState，replaceState</li>
+			<pre><code class="javascript">
+			//新的状态信息就会被加入历史状态栈，而浏览器地址栏也会变成新的相对 URL。但是，浏览器并不会真的向服务器发送请求，即使状态改变之后查询 location.href 也会返回与地址栏中相同的地址
+			history.pushState({name:'Nicholas'},'Nicholas page','nicholas.html');
+			//按下“后退”按钮
+			EventUtil.addHandler(window, "popstate", function(event){
+				var state = event.state;
+				if (state){ //第一个页面加载时 state 为空
+					processState(state);
+				}
+			});
+			//要更新当前状态，可以调用 replaceState()，传入的参数与 pushState()的前两个参数相同。调用这个方法不会在历史状态栈中创建新状态，只会重写当前状态。
+			history.replaceState({name:'Nicholas'},'Nicholas page','sujun.html')
+			</code></pre>
 		</ol>
 	</main>
-	<script>
+<script>
 	
-   hljs.initHighlightingOnLoad();
-   window.onload=function(){
-   	var player = document.getElementById('player'),
-					btn = document.getElementById('video-btn'),
-					curtime = document.getElementById('curtime'),
-					duration = document.getElementById('duration');
-				
-				EventUtil.addHandler(btn,'click',function(event){
-					if(player.paused){
-						player.play();
-						btn.value='Pause';
-					}else{
-						player.pause();
-						btn.value='Play'
-					}
+hljs.initHighlightingOnLoad();
+window.onload=function(){
+	var player = document.getElementById('player'),
+				btn = document.getElementById('video-btn'),
+				curtime = document.getElementById('curtime'),
+				duration = document.getElementById('duration');
+			
+	EventUtil.addHandler(btn,'click',function(event){
+		if(player.paused){
+			player.play();
+			btn.value='Pause';
+		}else{
+			player.pause();
+			btn.value='Play'
+		}
+	});
+	setTimeout(function(){
+		if(player.currentTime<player.duration){
+			curtime.innerHTML = player.currentTime;
+			setTimeout(arguments.callee, 250);
+		}
+		
+	},250);
+	player.ondurationchange= function(){
+		duration.innerHTML = player.duration;
+	}
+
+	var audio = new Audio('/media/小幸运_田馥甄.mp3');
+				EventUtil.addHandler(audio, 'canplaythrough', function(event){
+					audio.play();
 				});
-				setTimeout(function(){
-					if(player.currentTime<player.duration){
-						curtime.innerHTML = player.currentTime;
-						setTimeout(arguments.callee, 250);
-					}
-					
-				},250);
-				player.ondurationchange= function(){
-					duration.innerHTML = player.duration;
-				}
-				
-   }
-	</script>
+}
+</script>
 </body>
 </html>
 

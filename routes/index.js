@@ -3,7 +3,7 @@ var router = express.Router();
 
 
 router.get('/', function(req, res) {
-	res.render('chapter16', {title: 'HTML5 脚本编程'});
+	res.render('chapter15', {title: '使用 Canvas 绘图'});
 });
 
 router.get('/chapter23', function(req, res) {
@@ -36,6 +36,10 @@ router.get('/chapter17', function(req, res) {
 
 router.get('/chapter16', function(req, res) {
 	res.render('chapter16', {title: 'HTML5 脚本编程'});
+});
+
+router.get('/chapter15', function(req, res) {
+	res.render('chapter15', {title: '使用 Canvas 绘图'});
 });
 
 router.get('/uc', function(req, res) {
