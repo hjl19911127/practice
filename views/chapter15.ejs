@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%= title %></title>
+	<link rel="stylesheet" href="/highlight/styles/tomorrow-night.css">
+	<link rel="stylesheet" href="/stylesheets/style.css">
+	<script src='/highlight/highlight.pack.js'></script>
+	<script src='/javascripts/EventUtil.js'></script>
+	<style>
+	.lower-alpha{
+		padding-top: 20px;
+		padding-bottom: 20px;
+		border-radius: 5px;
+		font-size: 14px;
+		line-height: 2;
+		background: #d9edf7;
+		list-style-type: lower-alpha;
+	}
+	</style>
+</head>
+<body>
+	<header>
+		<h5>使用 Canvas 绘图</h5>
+	</header>
+	<main>
+		<ol>
+			<li>基本用法</li>
+			<canvas id="drawing" width="200" height="200">A drawing of something.</canvas>
+			<pre><code class="javascript">
+			var drawing = document.getElementById('drawing');
+			if(drawing.getContext){
+				var context = drawing.getContext('2d');
+
+				//context.fillStyle = '#00f';
+				//context.strokeStyle = 'red';
+
+				context.fillStyle = '#f00';
+				context.fillRect(10, 10, 50, 50);
+
+				context.fillStyle = 'rgba(0, 0, 255, 0.5)';
+				context.fillRect(30, 30, 50, 50);
+
+				context.clearRect(40,40,10,10);
+
+				context.strokeStyle = '#f00';
+				context.strokeRect(100, 10, 50, 50);
+
+				context.strokeStyle = 'rgba(0,0,255,0.5)';
+				context.strokeRect(120,30,50,50);
+
+				context.beginPath();
+				context.arc(100,100,99,0,2*Math.PI, false);
+				context.moveTo(194,100);
+				context.arc(100,100,94,0,2*Math.PI, false);
+				context.moveTo(100,100);
+				context.lineTo(100,15);
+				context.moveTo(100,100);
+				context.lineTo(35,100);
+				context.stroke();
+
+				context.font = 'bold 14px Arial';
+				context.textAlign = 'center';
+				context.textBaseline = 'middle';
+				//context.fillText('12',100,20);
+				context.strokeText('12',100,20);
+
+				var imgURL = drawing.toDataURL('image/png');
+				var image = document.createElement('img');
+				image.src = imgURL;
+				document.body.appendChild(image);
+			}
+			</code></pre>
+			<li>2D上下文
+				<ul>
+					<li>填充和描边：fillStyle，strokeStyle</li>
+					<li>绘制矩形：fillRect，strokeRect，clearRect</li>
+					<li>绘制路径：beginPath
+						<ul>
+							<li>arc(x, y, radius, startAngle, endAngle, counterclockwise)</li>
+							<li>arcTo(x1, y1, x2, y2, radius)从上一点开始绘制一条弧线，到(x2,y2)为止，并且以给定的半径 radius 穿过(x1,y1)。</li>
+							<li>bezierCurveTo(c1x, c1y, c2x, c2y, x, y)：从上一点开始绘制一条曲线，到(x,y)为止，并且以(c1x,c1y)和(c2x,c2y)为控制点。</li>
+							<li>lineTo(x, y)：从上一点开始绘制一条直线，到(x,y)为止。</li>
+							<li>moveTo(x, y)：将绘图游标移动到(x,y)，不画线。</li>
+							<li>quadraticCurveTo(cx, cy, x, y)：从上一点开始绘制一条二次曲线，到(x,y)为止，并且以(cx,cy)作为控制点。</li>
+							<li>rect(x, y, width, height)</li>
+						</ul>
+					</li>
+					<li>绘制文本：fillText，strokeText。属性：font，textAlign，textBaseline</li>
+					<li>变换
+						<ul>
+							<li>rotate(angle)：围绕原点旋转图像 angle 弧度。</li>
+							<li>scale(scaleX, scaleY)：缩放图像，在 x 方向乘以 scaleX，在 y 方向乘以 scaleY。 scaleX和 scaleY 的默认值都是 1.0。</li>
+							<li>translate(x, y)：将坐标原点移动到(x,y)。执行这个变换之后， 坐标(0,0)会变成之前由(x,y)表示的点。</li>
+							<li>transform(m1_1, m1_2, m2_1, m2_2, dx, dy)：直接修改变换矩阵，方式是乘以如下矩阵。</li>
+							<li>etTransform(m1_1, m1_2, m2_1, m2_2, dx, dy)：将变换矩阵重置为默认状态，然后再调用 transform()。</li>
+							<li>如果你知道将来还要返回某组属性与变换的组合，可以调用 save()方法。</li>
+							<li>等想要回到之前保存的设置时，可以调用 restore()方法，在保存设置的栈结构中向前返回一级，恢复之前的状态。</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+		</ol>
+	</main>
+	<script>
+	hljs.initHighlightingOnLoad();
+	window.onload=function(){
+		var drawing = document.getElementById('drawing');
+			if(drawing.getContext){
+				var context = drawing.getContext('2d');
+
+				//context.fillStyle = '#00f';
+				//context.strokeStyle = 'red';
+
+				context.fillStyle = '#f00';
+				context.fillRect(10, 10, 50, 50);
+
+				context.fillStyle = 'rgba(0, 0, 255, 0.5)';
+				context.fillRect(30, 30, 50, 50);
+
+				context.clearRect(40,40,10,10);
+
+				context.strokeStyle = '#f00';
+				context.strokeRect(100, 10, 50, 50);
+
+				context.strokeStyle = 'rgba(0,0,255,0.5)';
+				context.strokeRect(120,30,50,50);
+
+				context.beginPath();
+				context.arc(100,100,99,0,2*Math.PI, false);
+				context.moveTo(194,100);
+				context.arc(100,100,94,0,2*Math.PI, false);
+				context.moveTo(100,100);
+				context.lineTo(100,15);
+				context.moveTo(100,100);
+				context.lineTo(35,100);
+				context.stroke();
+
+				context.font = 'bold 14px Arial';
+				context.textAlign = 'center';
+				context.textBaseline = 'middle';
+				//context.fillText('12',100,20);
+				context.strokeText('12',100,20);
+
+				var imgURL = drawing.toDataURL('image/png');
+				var image = document.createElement('img');
+				image.src = imgURL;
+				document.body.appendChild(image);
+			}
+	}
+	</script>
+</body>
+</html>
+
+
+     
