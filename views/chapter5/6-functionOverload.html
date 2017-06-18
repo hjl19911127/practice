@@ -1,0 +1,65 @@
+{% extends '../layout.html' %} {% block title %}5closure{% parent %}{% endblock %} {% block content %}
+<em>函数重载</em> {% parent %} {% endblock %} {% block foot %} {% parent %}
+<script>
+    window.onload = function() {
+        Function.prototype.memoized = function(key) {
+            this._values = this._values || {};
+            return this._values[key] !== undefined ?
+                this._values[key] :
+                this._values[key] = this.apply(this, arguments);
+        };
+
+        function isPrime(num) {
+            var prime = num != 1;
+            for (var i = 2; i < num; i++) {
+                if (num % i == 0) {
+                    prime == false;
+                    break;
+                }
+            }
+            return prime;
+        }
+
+        assert(isPrime.memoized(5), 'The function works; 5 is prime');
+        assert(isPrime._values[5], 'The answer has been cached');
+        assert(true, '---------- 我是分隔线 ----------');
+
+        Function.prototype.memoize = function() {
+            var fn = this;
+            return function() {
+                return fn.memoized.apply(fn, arguments);
+            }
+        }
+
+        var isPrime1 = (function(num) {
+            var prime = num != 1;
+            for (var i = 2; i < num; i++) {
+                if (num % i == 0) {
+                    prime == false;
+                    break;
+                }
+            }
+            return prime;
+        }).memoize();
+        assert(isPrime1(17), '17 is prime');
+        assert(true, '---------- 我是分隔线 ----------');
+        //利用Prototype的机制进行浏览器判断，该代码来着Prototype
+        function wrap(object, method, wrapper) {
+            var fn = object[method];
+
+            return object[method] = function() {
+                return wrapper.apply(this, [fn.bind(this)].concat(Array.prototype.slice.call(arguments)));
+            }
+        }
+
+        if (Prototype.Browser.Opera) {
+            wrap(Element.Methods, 'readAttribute',
+                function(original, elem, attr) {
+                    return attr === 'title' ?
+                        elem.title :
+                        original(elem, attr);
+                });
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends '../layout.html' %} {% block title %}5closure{% parent %}{% endblock %} {% block content %}
+<em>即使函数</em> {% parent %}
+<div>DIV 0</div>
+<div>DIV 1</div> {% endblock %} {% block foot %} {% parent %}
+<script>
+    window.onload = function() {
+        $ = function() {
+            alert('not jQuery');
+        };
+
+        /*(function($) {
+            $('img').on('click', function(event) {
+                $(event.target).addClass('cilckedon');
+            });
+        })(jQuery);*/
+
+
+        var divs = document.getElementsByTagName('div');
+        for (var i = 0; i < divs.length; i++)(function(n) {
+            divs[n].addEventListener('click', function() {
+                alert('div #' + n + ' was clicked')
+            })
+        })(i)
+
+    }
+</script>
+{% endblock %}

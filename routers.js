@@ -10,14 +10,14 @@ module.exports = function(router) {
         contents: ['anonymous', 'recursion', 'funAsObj', 'arguments']
     }, {
         chapter: 5,
-        contents: ['closure', 'privateVariable', 'callback','functionContext', 'currying']
+        contents: ['closure', 'privateVariable', 'callback', 'functionContext', 'currying', 'functionOverload', 'immediateFunction']
     }];
 
     router.get('/', function*(next) {
         let data = {};
         data.lists = lists;
         yield this.render('index.html', data);
-        yield * next;
+        yield* next;
     });
 
     (function() {
@@ -26,7 +26,7 @@ module.exports = function(router) {
                 let index = j + 1;
                 router.get('/chapter' + lists[i].chapter + '/' + index, function*(next) {
                     yield this.render('chapter' + lists[i].chapter + '/' + index + '-' + lists[i].contents[j] + '.html');
-                    yield * next;
+                    yield* next;
                 });
             }
         }
@@ -34,6 +34,6 @@ module.exports = function(router) {
 
     router.get('/test', function*(next) {
         yield this.render('test.html');
-        yield * next;
+        yield* next;
     });
 };
